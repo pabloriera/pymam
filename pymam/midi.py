@@ -4,7 +4,9 @@
 Midi
 """
 
-__all__ = ["mtof"]
+import music21
+
+__all__ = ["music21","mtof", "playscore", "playnote", "scoresequence", "playsequence", "midiwrite"]
 
 def mtof(m): 
     """
@@ -15,16 +17,16 @@ def mtof(m):
 
     return f
 
-
 try:
-    from music21 import stream, instrument, note, duration, midi,tempo
- 
-    from numpy import float64
+    from music21 import stream, instrument, note, duration, midi, tempo
+
 
     def playscore(s):
         midi.realtime.StreamPlayer(s).play()
         
     def playnote(notas,dur,instrumento = instrument.Piano()):
+
+        from numpy import float64
         
         if type(notas)==str:
             s = stream.Score()
@@ -84,6 +86,7 @@ try:
         midi_file = open(name,'wb')
         midi_file.write(midi.translate.streamToMidiFile(score).writestr())
         midi_file.close()
+
 except:
     "No music21"
     pass

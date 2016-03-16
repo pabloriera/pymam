@@ -39,9 +39,9 @@ from .sound_play import *
 from . import wavio
 from .wavio import *
 
-# __all__ += math.__all__
-# __all__ += midi.__all__
-# __all__ += signals.__all__
-# __all__ += plots.__all__
-# __all__ += sound_play.__all__
-# __all__ += wavio.__all__
+__all__ += math.__all__
+__all__ += midi.__all__
+__all__ += signals.__all__
+__all__ += plots.__all__
+__all__ += sound_play.__all__
+__all__ += wavio.__all__

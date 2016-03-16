@@ -8,4 +8,4 @@ Created on Thu Mar 10 12:18:14 2016
 import pymam
 import pylab as pl
 
-pymam.play(pl.randn(10000)*0.2,44100)
+pymam.sound(pl.randn(10000)*0.2,44100)

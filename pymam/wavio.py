@@ -1,13 +1,16 @@
-import wave as _wave
-import numpy as _np
 
-from scipy.io.wavfile import write
-from scipy.io.wavfile import read
+
+
+
+__all__ = ['wavread24', 'wavread24', 'wavread', 'wavwrite']
 
 def _wav2array(nchannels, sampwidth, data):
     # Author: Warren Weckesser
     # License: BSD 3-Clause (http://opensource.org/licenses/BSD-3-Clause)
     """data must be the string containing the bytes from the wav file."""
+
+    import numpy as _np
+
     num_samples, remainder = divmod(len(data), sampwidth * nchannels)
     if remainder > 0:
         raise ValueError('The length of data is not a multiple of '
@@ -29,7 +32,7 @@ def _wav2array(nchannels, sampwidth, data):
     return result
 
 
-def readwav(file):
+def wavread24(file):
     # Author: Warren Weckesser
     # License: BSD 3-Clause (http://opensource.org/licenses/BSD-3-Clause)
     """
@@ -59,6 +62,9 @@ def readwav(file):
     In particular, the function does not read compressed WAV files.
 
     """
+    import wave as _wave
+    
+
     wav = _wave.open(file)
     rate = wav.getframerate()
     nchannels = wav.getnchannels()
@@ -70,7 +76,7 @@ def readwav(file):
     return rate, sampwidth, array
 
 
-def writewav24(filename, rate, data):
+def wavwrtite24(filename, rate, data):
     """
     Create a 24 bit wav file.
 
@@ -104,6 +110,10 @@ def writewav24(filename, rate, data):
     >>> writewav24("sine24.wav", rate, x)
 
     """
+
+    import numpy as _np
+    import wave as _wave
+
     a32 = _np.asarray(data, dtype=_np.int32)
     if a32.ndim == 1:
         # Convert to a 2D array with a single column.
@@ -122,9 +132,15 @@ def writewav24(filename, rate, data):
 
    
 def wavread(file_name):
+    
+    from scipy.io.wavfile import read
+
     fs, y = read(file_name)
     return fs,np.array(y,dtype=np.float64)/(2**15-1)
 
 def wavwrite(file_name,x,fs = 44100):
+
+    from scipy.io.wavfile import write
+
     x = x/np.max(np.abs(x))*0.9
     write(file_name,fs,np.array(x*(2**15-1),dtype=np.int16))

@@ -17,7 +17,8 @@ from scipy.signal import lfilter, freqz, freqs, tf2zpk,  iirfilter
 from itertools import combinations
 
 
-__all__ = ["time_array","envelope"]
+__all__ = ['time_array', 'envelope', 'dcremove', 'spectrum', 'plotwindowspectrum', 'plotspectrum', 'plotwav', 'filterresponse', 'polosyzeros', 'tukeywin', 'stft', 'butter_filter', 'autocorrelation', 'acf', 'continous_unique', 'cosineramp', 'roughness', 'dissmeasure']
+
 
 def time_array(start,dur,fs=44100):
     t = np.arange(0 , np.floor(fs*dur) )/fs+start

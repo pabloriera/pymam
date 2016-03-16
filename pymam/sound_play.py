@@ -2,8 +2,7 @@
 """
 IMPORT SOUND MODULES FOR LINUX
 
-sound(x,rate)
-play sound from x array at given sampling rate
+
 
 
 soundsc(x,rate)
@@ -13,7 +12,7 @@ play scaled sound from x array at given sampling rate
 
 import numpy as np
 import warnings
-#print "MAM SOUND LINUX"
+from pylab import pause
 
 try:
     from _scikits.audiolab import play
@@ -28,7 +27,13 @@ if not have_audiolab:
     except ImportError:
         have_sd = False
 
-def sound(x, rate=44100):
+__all__ = ["sound", "soundsc"]
+
+def sound(x, fs=44100, blocking = True):
+
+    """
+    Play sound from x array at given sampling rate
+    """
     
     if x.ndim==1:
         ch = 1
@@ -48,13 +53,23 @@ def sound(x, rate=44100):
         
     if have_audiolab or have_sd:
         
-        if x.ndim==2 and x.shape[1]==2:
+        if x.ndim==2 and x.shape[0]==2:
             x=x.T
             
-        play(x,rate)
+        play(x,fs)
+
+        if blocking:
+
+            pause(float(x.shape[0])/fs)
+
 
     else:
         warnings.warn('Cannot play sound, no sounddevice o audiolab module.')
 
-def soundsc(x, rate=44100):
-    sound(x/np.max(np.abs(x))*0.9,rate)
+def soundsc(x, fs=44100):
+    
+    """
+    Play normalized sound from x array at given sampling rate
+    """
+
+    sound(x/np.max(np.abs(x))*0.9,fs)

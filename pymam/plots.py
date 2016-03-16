@@ -8,8 +8,10 @@ Created on Mon Aug 18 18:14:51 2014
 import numpy as np
 import matplotlib.pyplot as plt
 import pylab as pl
-from matplotlib.collections import LineCollection
-from matplotlib.colors import ListedColormap, BoundaryNorm,hsv_to_rgb
+
+
+__all__ = ['make_segments', 'colorline', 'imagesc', 'axes3d', 'plot3', 'surf', 'scatter3', 'print_list', 'scattergroup', 'scattergroup3', 
+            'complexfunction', 'plot_cov_ellipse', 'labelsubplots', 'pairwise_significance', 'xylabel', 'multiplot']
 
 # Data manipulation:
 
@@ -33,7 +35,8 @@ def colorline(x, y, z=None, cmap=plt.get_cmap('copper'), norm=plt.Normalize(0.0,
     Optionally specify colors in the array z
     Optionally specify a colormap, a norm function and a line width
     '''
-    
+    from matplotlib.collections import LineCollection
+
     # Default colors equally spaced on [0,1]:
     if z is None:
         z = np.linspace(0.0, 1.0, len(x))
@@ -164,6 +167,8 @@ def scattergroup3(x,y,z,groups,colors = None,label=None, kwargs_group = None,**k
     
 def complexfunction(func,xl,yl):
     
+    from matplotlib.colors import hsv_to_rgb
+
     x,y = np.meshgrid(xl,yl)
     z = x + 1j*y
     
