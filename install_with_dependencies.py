@@ -12,6 +12,7 @@ def install(package):
 
 # Example
 if __name__ == '__main__':
+    install("music21")
     install("sounddevice")
     install("https://github.com/pabloriera/pymam/tarball/master")
     
