@@ -13,3 +13,6 @@ cp -v ../files/conf.py .
 make clean
 make html
 
+cd ../..
+git commit -am doc
+git subtree push --prefix dist origin gh-pages
