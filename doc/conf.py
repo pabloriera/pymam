@@ -51,8 +51,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pymam'
-copyright = u'2016, Author'
-author = u'Author'
+copyright = u'2016, Pablo E. Riera'
+author = u'Pablo E. Riera'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
