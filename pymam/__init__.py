@@ -15,7 +15,7 @@ except ImportError:
 
 from scipy.signal import lfilter, firwin, tf2zpk, butter, freqz, freqs, ellip 
 
-__all__ = ["math","midi","signals","plots","sound_play","wavio"]
+__all__ = ["math","midi","signal","plot","audio"]
 
 
 from . import math
@@ -24,24 +24,21 @@ from .math import *
 from . import midi
 from .midi import *
 
-from . import signals
-from .signals import *
+from . import signal
+from .signal import *
 
 from . import mfcc
 from .mfcc import *
 
-from . import plots
-from .plots import *
+from . import plot
+from .plot import *
 
-from . import sound_play
-from .sound_play import *
-
-from . import wavio
-from .wavio import *
+from . import audio
+from .audio import *
 
 __all__ += math.__all__
 __all__ += midi.__all__
-__all__ += signals.__all__
-__all__ += plots.__all__
-__all__ += sound_play.__all__
-__all__ += wavio.__all__
+__all__ += signal.__all__
+__all__ += plot.__all__
+__all__ += audio.__all__
+
