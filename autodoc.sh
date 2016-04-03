@@ -1,6 +1,7 @@
 #!/bin/sh
 sudo python setup.py clean
 sudo python setup.py install
+sudo rm -rf build/
 
 rm -rf dist/doc
 sphinx-apidoc . --full -o dist/doc -H 'pymam' -V '1.0'
