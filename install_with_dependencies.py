@@ -7,12 +7,15 @@ Created on Wed Mar 16 16:52:45 2016
 
 import pip
 
-def install(package,opt=opt):
-    pip.main(['install',opt, package])
+def install(package):
+	pip.main(['install',package ])
+
+def upgrade(package):
+	pip.main(['install',"--upgrade",package ])
 
 # Example
 if __name__ == '__main__':
     install("music21")
     install("sounddevice")
-    install("https://github.com/pabloriera/pymam/tarball/master","--upgrade")
+    upgrade("https://github.com/pabloriera/pymam/tarball/master")
     
