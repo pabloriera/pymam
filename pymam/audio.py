@@ -9,17 +9,18 @@ import warnings
 from pylab import pause
 
 try:
-    from _scikits.audiolab import play
-    have_audiolab = True
+    from sounddevice import play
+    audio_ok = True
 except ImportError:
-    have_audiolab = False
+    audio_ok = False
 
-if not have_audiolab:
+if not audio_ok:
     try:
-        from sounddevice import play
-        have_sd = True
+        from _scikits.audiolab import play
+        audio_ok = True
     except ImportError:
-        have_sd = False
+        audio_ok = False
+
 
 __all__ = ["sound", "soundsc", 'wavread24', 'wavwrite24', 'wavread', 'wavwrite']
 
@@ -45,7 +46,7 @@ def sound(x, fs=44100, blocking = True):
         print 'Error: 1-D array for mono, or 2-D array where rows should be the number of channels, 1 (mono) or 2 (stereo)'
         return
         
-    if have_audiolab or have_sd:
+    if audio_ok:
         
         if x.ndim==2 and x.shape[0]==2:
             x=x.T
@@ -203,11 +204,11 @@ def wavread(file_name):
     from scipy.io.wavfile import read
 
     fs, y = read(file_name)
-    return fs,np.array(y,dtype=np.float64)/(2**15-1)
+    return fs,np.array(y.T,dtype=np.float64)/(2**15-1)
 
 def wavwrite(file_name,x,fs = 44100):
 
     from scipy.io.wavfile import write
 
-    x = x/np.max(np.abs(x))*0.9
+    x = x.T/np.max(np.abs(x))*0.9
     write(file_name,fs,np.array(x*(2**15-1),dtype=np.int16))

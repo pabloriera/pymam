@@ -24,8 +24,6 @@ from .midi import *
 
 from .signal import *
 
-from .mfcc import *
-
 from .plot import *
 
 from .audio import *
