@@ -53,28 +53,30 @@ try:
 
         return nota
 
-    def scoresequence(notas,durs,vols=None,instrumento = instrument.Piano(),bpm=60):
-        
-        s = stream.Stream() 
+    def scoresequence(notes,durations,velocities=None,instrument = None,bpm=60):
+
+        if instrument==None:
+            instrument = music21.instrument.Piano()
+
+        s = stream.Stream()
         s.append(tempo.MetronomeMark(number=bpm))
-        for n,d in zip(notas,durs):
+        s.append(instrument)
+
+        for n,d in zip(notes,durations):
             if n==0:
                 s.append(note.Rest(n,duration=duration.Duration(d)))
             else:
                 s.append(note.Note(n,duration=duration.Duration(d)))
         
-        if vols==None:
-            vols=len(notas)*[127]        
+        if velocities==None:
+            velocities=len(notes)*[127]
         
-        p = stream.Part()
-        p.insert(instrumento)    
-        p.append(s)
-        sc = stream.Score()
-        sc.insert(p)
-        
-        for n,v in zip(sc.flat.notes,vols):
+        for n,v in zip(s.flat.notes,velocities):
             n.volume = v
      
+        sc = stream.Score()
+        sc.insert(s)        
+        
         return sc
         
     def playsequence(notas,durs,vols=None,instrumento = instrument.Piano(),bpm=60):
