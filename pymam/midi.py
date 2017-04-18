@@ -24,14 +24,14 @@ try:
     def playscore(s):
         midi.realtime.StreamPlayer(s).play()
         
-    def playnote(notas,dur,instrumento = instrument.Piano()):
+    def playnote(notas,dur,instrument = instrument.Piano()):
 
         from numpy import float64
         
         if type(notas)==str:
             s = stream.Score()
             p1 = stream.Part()
-            p1.insert(instrumento)
+            p1.insert(instrument)
             m1p1 = stream.Measure()
             nota = note.Note(notas,duration=duration.Duration(dur))
             m1p1.append(nota)
@@ -42,7 +42,7 @@ try:
         elif isinstance(notas, (int, long, float, float64)):
             s = stream.Score()
             p1 = stream.Part()
-            p1.insert(instrumento)
+            p1.insert(instrument)
             m1p1 = stream.Measure()
             nota = note.Note(duration=duration.Duration(dur))
             nota.frequency = notas
@@ -79,8 +79,11 @@ try:
         
         return sc
         
-    def playsequence(notas,durs,velocities=None,instrumento = instrument.Piano(),bpm=60):
-        score = scoresequence(notas,durs,velocities=velocities,instrumento=instrumento,bpm=bpm)
+    def playsequence(notas,durs,velocities=None,instrument =None,bpm=60):
+        if instrument==None:
+            instrument = music21.instrument.Piano()
+            
+        score = scoresequence(notas,durs,velocities=velocities,instrument=instrument,bpm=bpm)
         playscore(score)
         return score
 
