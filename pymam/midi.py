@@ -79,8 +79,8 @@ try:
         
         return sc
         
-    def playsequence(notas,durs,vols=None,instrumento = instrument.Piano(),bpm=60):
-        score = scoresequence(notas,durs,vols=vols,instrumento=instrumento,bpm=bpm)
+    def playsequence(notas,durs,velocities=None,instrumento = instrument.Piano(),bpm=60):
+        score = scoresequence(notas,durs,velocities=velocities,instrumento=instrumento,bpm=bpm)
         playscore(score)
         return score
 
