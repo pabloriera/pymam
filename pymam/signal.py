@@ -56,10 +56,10 @@ def plotspectrum(x,fs=44100.0,xscale='linear',units='db',plotformat = '-',nfft=-
     F,f = spectrum(x,fs,nfft = nfft)
     N = float(len(F))
     if units=='db':
-        p = pl.plot(f[0:N/2]/hzunit,10*sp.log10(F[0:N/2]),plotformat)
+        p = pl.plot(f[0:int(N/2)]/hzunit,10*sp.log10(F[0:int(N/2)]),plotformat)
         pl.ylabel('Potencia dB')
     else:
-        p = pl.plot(f[0:N/2]/hzunit,F[0:N/2],plotformat)
+        p = pl.plot(f[0:int(N/2)]/hzunit,F[0:int(N/2)],plotformat)
         pl.ylabel('Potencia')
     
     pl.xlim(0,fs/2/hzunit)
