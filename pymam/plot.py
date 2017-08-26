@@ -70,16 +70,16 @@ def imagesc(*args,**kwargs):
         handle = plt.imshow(I,aspect='auto',interpolation='none', extent = extent,**kwargs)
         return handle
     if len(args)==2:
-        print "Input should be imagesc(x,y,I) or imagesc(I)"
+        print("Input should be imagesc(x,y,I) or imagesc(I)")
 
 def axes3d():
     from mpl_toolkits.mplot3d import Axes3D
 
     fig = plt.gcf()
     if plt.gca().__class__.__name__=='AxesSubplot':
-	ax = fig.add_subplot(*plt.gca().properties()['geometry'], projection='3d')
+        ax = fig.add_subplot(*plt.gca().properties()['geometry'], projection='3d')
     elif plt.gca().__class__.__name__=='Axes3DSubplot':
-	ax = plt.gca()
+        ax = plt.gca()
     else:
     	ax = fig.add_subplot(111, projection='3d')
 

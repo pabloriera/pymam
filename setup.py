@@ -1,7 +1,8 @@
-from distutils.core import setup
+from setuptools import setup
 setup(name='pymam',
       version='1.0',
-      packages = ['pymam']
+      packages = ['pymam'],
+      install_requires=['music21','sounddevice','pygame']
       )
 
 # Doc generation
