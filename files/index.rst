@@ -1,9 +1,5 @@
 .. pymam documentation master file, created by
-<<<<<<< HEAD
-   sphinx-quickstart on Thu Sep 14 16:48:30 2017.
-=======
    sphinx-quickstart on Sun Apr  3 14:13:00 2016.
->>>>>>> 23c3d0aa3449236a7a33df38e302511822a54ba6
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -16,11 +12,6 @@ Contents:
    :maxdepth: 4
 
    pymam
-<<<<<<< HEAD
-   setup
-
-=======
->>>>>>> 23c3d0aa3449236a7a33df38e302511822a54ba6
 
 Indices and tables
 ==================
