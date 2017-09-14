@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymam.plot &mdash; pymam 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pymam 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="pymam" href="../pymam.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pymam 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../pymam.html" accesskey="U">pymam</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pymam.plot</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Mon Aug 18 18:14:51 2014</span>
+
+<span class="sd">@author: miles</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="kn">as</span> <span class="nn">pl</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;make_segments&#39;</span><span class="p">,</span> <span class="s1">&#39;colorline&#39;</span><span class="p">,</span> <span class="s1">&#39;imagesc&#39;</span><span class="p">,</span> <span class="s1">&#39;axes3d&#39;</span><span class="p">,</span> <span class="s1">&#39;plot3&#39;</span><span class="p">,</span> <span class="s1">&#39;surf&#39;</span><span class="p">,</span> <span class="s1">&#39;scatter3&#39;</span><span class="p">,</span> <span class="s1">&#39;print_list&#39;</span><span class="p">,</span> <span class="s1">&#39;scattergroup&#39;</span><span class="p">,</span> <span class="s1">&#39;scattergroup3&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;complexfunction&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_cov_ellipse&#39;</span><span class="p">,</span> <span class="s1">&#39;labelsubplots&#39;</span><span class="p">,</span> <span class="s1">&#39;pairwise_significance&#39;</span><span class="p">,</span> <span class="s1">&#39;xylabel&#39;</span><span class="p">,</span> <span class="s1">&#39;multiplot&#39;</span><span class="p">]</span>
+
+<span class="c1"># Data manipulation:</span>
+
+<div class="viewcode-block" id="make_segments"><a class="viewcode-back" href="../../pymam.html#pymam.plot.make_segments">[docs]</a><span class="k">def</span> <span class="nf">make_segments</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create list of line segments from x and y coordinates, in the correct format for LineCollection:</span>
+<span class="sd">    an array of the form   numlines x (points per line) x 2 (x and y) array</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">points</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">:]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">segments</span>
+
+
+<span class="c1"># Interface to LineCollection:</span>
+</div>
+<div class="viewcode-block" id="colorline"><a class="viewcode-back" href="../../pymam.html#pymam.plot.colorline">[docs]</a><span class="k">def</span> <span class="nf">colorline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;copper&#39;</span><span class="p">),</span> <span class="n">norm</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Plot a colored line with coordinates x and y</span>
+<span class="sd">    Optionally specify colors in the array z</span>
+<span class="sd">    Optionally specify a colormap, a norm function and a line width</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.collections</span> <span class="kn">import</span> <span class="n">LineCollection</span>
+
+    <span class="c1"># Default colors equally spaced on [0,1]:</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+           
+    <span class="c1"># Special case if a single number:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>  <span class="c1"># to check for numerical input -- this is a hack</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">z</span><span class="p">])</span>
+        
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    
+    <span class="n">segments</span> <span class="o">=</span> <span class="n">make_segments</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">lc</span> <span class="o">=</span> <span class="n">LineCollection</span><span class="p">(</span><span class="n">segments</span><span class="p">,</span> <span class="n">array</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">lc</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">lc</span>
+</div>
+<div class="viewcode-block" id="imagesc"><a class="viewcode-back" href="../../pymam.html#pymam.plot.imagesc">[docs]</a><span class="k">def</span> <span class="nf">imagesc</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span><span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">handle</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">x_start</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">x_end</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">y_start</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y_end</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">x_start</span><span class="p">,</span> <span class="n">x_end</span> <span class="p">,</span> <span class="n">y_start</span> <span class="p">,</span> <span class="n">y_end</span> <span class="p">]</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span><span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">extent</span> <span class="o">=</span> <span class="n">extent</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">handle</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s2">&quot;Input should be imagesc(x,y,I) or imagesc(I)&quot;</span>
+</div>
+<div class="viewcode-block" id="axes3d"><a class="viewcode-back" href="../../pymam.html#pymam.plot.axes3d">[docs]</a><span class="k">def</span> <span class="nf">axes3d</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;AxesSubplot&#39;</span><span class="p">:</span>
+	<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="o">*</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">properties</span><span class="p">()[</span><span class="s1">&#39;geometry&#39;</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;Axes3DSubplot&#39;</span><span class="p">:</span>
+	<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+    	<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="plot3"><a class="viewcode-back" href="../../pymam.html#pymam.plot.plot3">[docs]</a><span class="k">def</span> <span class="nf">plot3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes3d</span><span class="p">()</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">ax</span>
+    </div>
+<div class="viewcode-block" id="surf"><a class="viewcode-back" href="../../pymam.html#pymam.plot.surf">[docs]</a><span class="k">def</span> <span class="nf">surf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes3d</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">Z</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="scatter3"><a class="viewcode-back" href="../../pymam.html#pymam.plot.scatter3">[docs]</a><span class="k">def</span> <span class="nf">scatter3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes3d</span><span class="p">()</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">ax</span>
+</div>
+<div class="viewcode-block" id="print_list"><a class="viewcode-back" href="../../pymam.html#pymam.plot.print_list">[docs]</a><span class="k">def</span> <span class="nf">print_list</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;{}: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lst</span><span class="p">)))</span> 
+
+</div>
+<div class="viewcode-block" id="scattergroup"><a class="viewcode-back" href="../../pymam.html#pymam.plot.scattergroup">[docs]</a><span class="k">def</span> <span class="nf">scattergroup</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">groups</span><span class="p">,</span><span class="n">colors</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kwargs_group</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    
+    <span class="n">group_ix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">groups</span><span class="p">))</span>
+          
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span><span class="o">==</span><span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_ix</span><span class="p">)))</span>
+      
+    <span class="k">for</span> <span class="n">ix</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">group_ix</span><span class="p">,</span><span class="n">colors</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs_group</span><span class="p">)</span><span class="o">!=</span><span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs_group</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span><span class="o">+</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">label</span><span class="p">)</span><span class="o">==</span><span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span> 
+            <span class="n">la</span> <span class="o">=</span> <span class="n">ix</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">la</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
+
+        <span class="n">fi</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span><span class="o">==</span><span class="n">ix</span><span class="p">)</span>
+        <span class="n">x_</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+        <span class="n">y_</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span><span class="n">y_</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">la</span><span class="p">,</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="scattergroup3"><a class="viewcode-back" href="../../pymam.html#pymam.plot.scattergroup3">[docs]</a><span class="k">def</span> <span class="nf">scattergroup3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">groups</span><span class="p">,</span><span class="n">colors</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">kwargs_group</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    
+    <span class="n">group_ix</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">groups</span><span class="p">))</span>
+          
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span><span class="o">==</span><span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_ix</span><span class="p">)))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">ix</span><span class="p">,</span><span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">group_ix</span><span class="p">,</span><span class="n">colors</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs_group</span><span class="p">)</span><span class="o">!=</span><span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">kwargs_group</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span><span class="o">+</span><span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">label</span><span class="p">)</span><span class="o">==</span><span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span> 
+            <span class="n">la</span> <span class="o">=</span> <span class="n">ix</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">la</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
+
+        <span class="n">fi</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span><span class="o">==</span><span class="n">ix</span><span class="p">)</span>
+        <span class="n">x_</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+        <span class="n">y_</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+        <span class="n">z_</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">fi</span><span class="p">]</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">scatter3</span><span class="p">(</span><span class="n">x_</span><span class="p">,</span><span class="n">y_</span><span class="p">,</span><span class="n">z_</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">la</span><span class="p">,</span><span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">axes</span>
+    </div>
+<div class="viewcode-block" id="complexfunction"><a class="viewcode-back" href="../../pymam.html#pymam.plot.complexfunction">[docs]</a><span class="k">def</span> <span class="nf">complexfunction</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">xl</span><span class="p">,</span><span class="n">yl</span><span class="p">):</span>
+    
+    <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">hsv_to_rgb</span>
+
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xl</span><span class="p">,</span><span class="n">yl</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1j</span><span class="o">*</span><span class="n">y</span>
+    
+    <span class="n">H</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">xl</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">yl</span><span class="p">),</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">hue</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="n">H</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">sat</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">C</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">hue</span>
+    <span class="n">C</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sat</span>
+    <span class="n">C</span><span class="p">[:,:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    
+    <span class="n">pl</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hsv_to_rgb</span><span class="p">(</span><span class="n">C</span><span class="p">),</span><span class="n">extent</span><span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">xl</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">xl</span><span class="p">),</span><span class="nb">min</span><span class="p">(</span><span class="n">yl</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">yl</span><span class="p">)]);</span>
+        </div>
+<div class="viewcode-block" id="plot_cov_ellipse"><a class="viewcode-back" href="../../pymam.html#pymam.plot.plot_cov_ellipse">[docs]</a><span class="k">def</span> <span class="nf">plot_cov_ellipse</span><span class="p">(</span><span class="n">cov</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">volume</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">ec</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots an ellipse enclosing *volume* based on the specified covariance</span>
+<span class="sd">    matrix (*cov*) and location (*pos*). Additional keyword arguments are passed on to the </span>
+<span class="sd">    ellipse patch artist.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">        cov : The 2x2 covariance matrix to base the ellipse on</span>
+<span class="sd">        pos : The location of the center of the ellipse. Expects a 2-element</span>
+<span class="sd">            sequence of [x0, y0].</span>
+<span class="sd">        volume : The volume inside the ellipse; defaults to 0.5</span>
+<span class="sd">        ax : The axis that the ellipse will be plotted on. Defaults to the </span>
+<span class="sd">            current axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+    <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chi2</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Ellipse</span>
+
+    <span class="k">def</span> <span class="nf">eigsorted</span><span class="p">(</span><span class="n">cov</span><span class="p">):</span>
+        <span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">vals</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">vals</span><span class="p">[</span><span class="n">order</span><span class="p">],</span> <span class="n">vecs</span><span class="p">[:,</span><span class="n">order</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="n">vals</span><span class="p">,</span> <span class="n">vecs</span> <span class="o">=</span> <span class="n">eigsorted</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="o">*</span><span class="n">vecs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">kwrg</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="n">fc</span><span class="p">,</span> <span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span><span class="n">ec</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="n">a</span><span class="p">,</span> <span class="s1">&#39;linewidth&#39;</span><span class="p">:</span><span class="n">lw</span><span class="p">}</span>
+
+    <span class="c1"># Width and height are &quot;full&quot; widths, not radius</span>
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+    <span class="n">ellip</span> <span class="o">=</span> <span class="n">Ellipse</span><span class="p">(</span><span class="n">xy</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">theta</span><span class="p">,</span> <span class="o">**</span><span class="n">kwrg</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">ellip</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="labelsubplots"><a class="viewcode-back" href="../../pymam.html#pymam.plot.labelsubplots">[docs]</a><span class="k">def</span> <span class="nf">labelsubplots</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">st</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span> 
+    <span class="n">fs</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.size&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">loc</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">locc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.985</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">fs</span><span class="o">/</span><span class="mf">120.0</span><span class="p">]</span>
+        <span class="n">align</span> <span class="o">=</span> <span class="s1">&#39;right&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">locc</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.015</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">fs</span><span class="o">/</span><span class="mf">120.0</span><span class="p">]</span>
+        <span class="n">align</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">st</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;(&#39;</span><span class="o">+</span><span class="n">ascii_lowercase</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;)&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">st</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">locc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">locc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">s</span><span class="p">,</span><span class="n">horizontalalignment</span><span class="o">=</span><span class="n">align</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="pairwise_significance"><a class="viewcode-back" href="../../pymam.html#pymam.plot.pairwise_significance">[docs]</a><span class="k">def</span> <span class="nf">pairwise_significance</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span><span class="n">bools</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">wide</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+    <span class="n">pares</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="p">)]</span>
+    
+    <span class="n">marker_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;^&#39;</span><span class="p">]</span>
+<span class="c1">#    (u&#39;o&#39;, u&#39;v&#39;, u&#39;^&#39;, u&#39;&lt;&#39;, u&#39;&gt;&#39;, u&#39;8&#39;, u&#39;s&#39;, u&#39;p&#39;, u&#39;*&#39;, u&#39;h&#39;, u&#39;H&#39;, u&#39;D&#39;, u&#39;d&#39;)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">b</span><span class="p">,(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bools</span><span class="p">,</span><span class="n">pares</span><span class="p">):</span>       
+        <span class="k">if</span> <span class="n">b</span> <span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">height</span><span class="o">+</span><span class="n">wide</span><span class="o">*</span><span class="n">k</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">:</span>
+                <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">]],[</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">],</span><span class="s1">&#39;|-k&#39;</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">coords</span><span class="p">[</span><span class="n">j</span><span class="p">]],[</span><span class="n">h</span><span class="p">,</span><span class="n">h</span><span class="p">],</span><span class="n">marker_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">markersize</span><span class="o">=</span><span class="mi">10</span> <span class="p">)</span>
+            <span class="n">k</span><span class="o">+=</span><span class="mi">1</span>
+        
+    </div>
+<div class="viewcode-block" id="xylabel"><a class="viewcode-back" href="../../pymam.html#pymam.plot.xylabel">[docs]</a><span class="k">def</span> <span class="nf">xylabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span><span class="n">ylabel</span><span class="p">,</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span><span class="n">left</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">):</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">left</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="n">ylabel</span><span class="p">,</span><span class="n">verticalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span><span class="n">rotation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span><span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">bottom</span><span class="p">,</span><span class="n">xlabel</span><span class="p">,</span><span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">transFigure</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="multiplot"><a class="viewcode-back" href="../../pymam.html#pymam.plot.multiplot">[docs]</a><span class="k">def</span> <span class="nf">multiplot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">row</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    
+    <span class="n">Nsp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">xk</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">yk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">Nsp</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nsp</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+            <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">xk</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">yk</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">yk</span><span class="p">)</span>
+            <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xk</span><span class="p">)</span>
+            <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">yk</span><span class="p">)</span>
+        
+
+    <span class="k">else</span><span class="p">:</span>
+    
+        <span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">xk</span><span class="p">,</span><span class="n">yk</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">(),</span><span class="n">y</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">())):</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">Nsp</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nsp</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+            <span class="n">pl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">xk</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">yk</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">yk</span><span class="p">)</span>
+            <span class="n">pl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xk</span><span class="p">)</span>
+            <span class="n">pl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">yk</span><span class="p">)</span>           
+
+    <span class="n">pl</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>  
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pymam 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../pymam.html" >pymam</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2017, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
