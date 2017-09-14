@@ -9,7 +9,7 @@ import pylab as pl
 try:
     from scipy.signal.windows import *
 except ImportError:
-    print('No windows functions loaded')
+    print 'No windows functions loaded'
     
 
 from scipy.fftpack import fft, fftshift

@@ -43,7 +43,7 @@ def sound(x, fs=44100, blocking = True):
             ch = 2
              
     elif x.ndim>2 or x.shape[1]>2:
-        print('Error: 1-D array for mono, or 2-D array where rows should be the number of channels, 1 (mono) or 2 (stereo)')
+        print 'Error: 1-D array for mono, or 2-D array where rows should be the number of channels, 1 (mono) or 2 (stereo)'
         return
         
     if audio_ok:
