@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymam.midi &mdash; pymam 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="pymam 1.0 documentation" href="../../index.html" />
+    <link rel="up" title="pymam" href="../pymam.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pymam 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../pymam.html" accesskey="U">pymam</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pymam.midi</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Midi</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">music21</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;music21&quot;</span><span class="p">,</span><span class="s2">&quot;mtof&quot;</span><span class="p">,</span> <span class="s2">&quot;playscore&quot;</span><span class="p">,</span> <span class="s2">&quot;playnote&quot;</span><span class="p">,</span> <span class="s2">&quot;scoresequence&quot;</span><span class="p">,</span> <span class="s2">&quot;playsequence&quot;</span><span class="p">,</span> <span class="s2">&quot;midiwrite&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="mtof"><a class="viewcode-back" href="../../pymam.html#pymam.midi.mtof">[docs]</a><span class="k">def</span> <span class="nf">mtof</span><span class="p">(</span><span class="n">m</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Midi to Frequency (Hz)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="mi">440</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">((</span><span class="n">m</span><span class="o">-</span><span class="mi">69</span><span class="p">)</span><span class="o">/</span><span class="mf">12.0</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">f</span>
+</div>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">music21</span> <span class="kn">import</span> <span class="n">stream</span><span class="p">,</span> <span class="n">instrument</span><span class="p">,</span> <span class="n">note</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">midi</span><span class="p">,</span> <span class="n">tempo</span>
+
+
+<div class="viewcode-block" id="playscore"><a class="viewcode-back" href="../../pymam.html#pymam.midi.playscore">[docs]</a>    <span class="k">def</span> <span class="nf">playscore</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">midi</span><span class="o">.</span><span class="n">realtime</span><span class="o">.</span><span class="n">StreamPlayer</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+        </div>
+<div class="viewcode-block" id="playnote"><a class="viewcode-back" href="../../pymam.html#pymam.midi.playnote">[docs]</a>    <span class="k">def</span> <span class="nf">playnote</span><span class="p">(</span><span class="n">notas</span><span class="p">,</span><span class="n">dur</span><span class="p">,</span><span class="n">instrumento</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">Piano</span><span class="p">()):</span>
+
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">float64</span>
+        
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">notas</span><span class="p">)</span><span class="o">==</span><span class="nb">str</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Score</span><span class="p">()</span>
+            <span class="n">p1</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Part</span><span class="p">()</span>
+            <span class="n">p1</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">instrumento</span><span class="p">)</span>
+            <span class="n">m1p1</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Measure</span><span class="p">()</span>
+            <span class="n">nota</span> <span class="o">=</span> <span class="n">note</span><span class="o">.</span><span class="n">Note</span><span class="p">(</span><span class="n">notas</span><span class="p">,</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">dur</span><span class="p">))</span>
+            <span class="n">m1p1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nota</span><span class="p">)</span>
+            <span class="n">p1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m1p1</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">p1</span><span class="p">)</span>
+            <span class="n">playscore</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">notas</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">float64</span><span class="p">)):</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Score</span><span class="p">()</span>
+            <span class="n">p1</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Part</span><span class="p">()</span>
+            <span class="n">p1</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">instrumento</span><span class="p">)</span>
+            <span class="n">m1p1</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Measure</span><span class="p">()</span>
+            <span class="n">nota</span> <span class="o">=</span> <span class="n">note</span><span class="o">.</span><span class="n">Note</span><span class="p">(</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">dur</span><span class="p">))</span>
+            <span class="n">nota</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="n">notas</span>
+            <span class="n">m1p1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nota</span><span class="p">)</span>
+            <span class="n">p1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m1p1</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">p1</span><span class="p">)</span>
+            <span class="n">playscore</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">nota</span>
+</div>
+<div class="viewcode-block" id="scoresequence"><a class="viewcode-back" href="../../pymam.html#pymam.midi.scoresequence">[docs]</a>    <span class="k">def</span> <span class="nf">scoresequence</span><span class="p">(</span><span class="n">notes</span><span class="p">,</span><span class="n">durations</span><span class="p">,</span><span class="n">velocities</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">instrument</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span><span class="n">bpm</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">instrument</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+            <span class="n">instrument</span> <span class="o">=</span> <span class="n">music21</span><span class="o">.</span><span class="n">instrument</span><span class="o">.</span><span class="n">Piano</span><span class="p">()</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Stream</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tempo</span><span class="o">.</span><span class="n">MetronomeMark</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="n">bpm</span><span class="p">))</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">instrument</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">notes</span><span class="p">,</span><span class="n">durations</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">Rest</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">d</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">Note</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">d</span><span class="p">)))</span>
+        
+        <span class="k">if</span> <span class="n">velocities</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+            <span class="n">velocities</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="mi">127</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">flat</span><span class="o">.</span><span class="n">notes</span><span class="p">,</span><span class="n">velocities</span><span class="p">):</span>
+            <span class="n">n</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="n">v</span>
+     
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">Score</span><span class="p">()</span>
+        <span class="n">sc</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>        
+        
+        <span class="k">return</span> <span class="n">sc</span>
+        </div>
+<div class="viewcode-block" id="playsequence"><a class="viewcode-back" href="../../pymam.html#pymam.midi.playsequence">[docs]</a>    <span class="k">def</span> <span class="nf">playsequence</span><span class="p">(</span><span class="n">notas</span><span class="p">,</span><span class="n">durs</span><span class="p">,</span><span class="n">vols</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">instrumento</span> <span class="o">=</span> <span class="n">instrument</span><span class="o">.</span><span class="n">Piano</span><span class="p">(),</span><span class="n">bpm</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="n">scoresequence</span><span class="p">(</span><span class="n">notas</span><span class="p">,</span><span class="n">durs</span><span class="p">,</span><span class="n">vols</span><span class="o">=</span><span class="n">vols</span><span class="p">,</span><span class="n">instrumento</span><span class="o">=</span><span class="n">instrumento</span><span class="p">,</span><span class="n">bpm</span><span class="o">=</span><span class="n">bpm</span><span class="p">)</span>
+        <span class="n">playscore</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">score</span>
+</div>
+<div class="viewcode-block" id="midiwrite"><a class="viewcode-back" href="../../pymam.html#pymam.midi.midiwrite">[docs]</a>    <span class="k">def</span> <span class="nf">midiwrite</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">midi_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">midi_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">midi</span><span class="o">.</span><span class="n">translate</span><span class="o">.</span><span class="n">streamToMidiFile</span><span class="p">(</span><span class="n">score</span><span class="p">)</span><span class="o">.</span><span class="n">writestr</span><span class="p">())</span>
+        <span class="n">midi_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</div>
+<span class="k">except</span><span class="p">:</span>
+    <span class="s2">&quot;No music21&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">pymam 1.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+          <li><a href="../pymam.html" >pymam</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2017, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
