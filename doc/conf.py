@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # pymam documentation build configuration file, created by
-# sphinx-quickstart on Thu Sep 14 16:45:31 2017.
+# sphinx-quickstart on Thu Sep 14 16:47:04 2017.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
