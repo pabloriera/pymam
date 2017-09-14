@@ -15,5 +15,6 @@ make clean
 make html
 
 cd ../..
-git commit -am doc
+git add dist/\*
+git commit -m doc
 git subtree push --prefix dist origin gh-pages
